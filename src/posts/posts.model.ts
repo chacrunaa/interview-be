@@ -8,10 +8,10 @@ interface PostCreationAttrs {
     title: string;
     content: string;
     userId: number;
-    image: string;
+    // image: string;
 }
 
-@Table({tableName: 'posts'})
+@Table({tableName: 'posts', timestamps: true})
 export class Post extends Model<Post, PostCreationAttrs> {
     @Column({type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true})
     id: number;
@@ -22,8 +22,8 @@ export class Post extends Model<Post, PostCreationAttrs> {
     @Column({type: DataType.STRING, allowNull: false})
     content: string;
 
-    @Column({type: DataType.STRING})
-    image: string;
+    // @Column({type: DataType.STRING})
+    // image: string;
 
     @ForeignKey(() => User)
     @Column({type: DataType.INTEGER})
@@ -32,4 +32,9 @@ export class Post extends Model<Post, PostCreationAttrs> {
     @BelongsTo(() => User)
     author: User
 
+    @Column({ type: DataType.DATE, defaultValue: DataType.NOW })
+    createdAt: Date; 
+
+    @Column({ type: DataType.DATE, defaultValue: DataType.NOW })
+    updatedAt: Date; 
 }
