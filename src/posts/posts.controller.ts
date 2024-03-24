@@ -9,7 +9,7 @@ import { CreatePostDto } from "./dto/create-post.dto";
 import { PostsService } from "./posts.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 
-@Controller("posts")
+@Controller("api/posts")
 export class PostsController {
   constructor(private postService: PostsService) {}
 
