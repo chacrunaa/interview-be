@@ -3,23 +3,30 @@ import { InjectModel } from "@nestjs/sequelize";
 import { QueryParams } from "src/interviews/dto/create-interview-query.dto";
 import { CreateInterviewDto } from "src/interviews/dto/create-interview.dto";
 import { Interview } from "src/interviews/interviews.model";
+import { JwtService } from '@nestjs/jwt';
 import { parseQueryAndFilter } from "src/interviews/utils/queryParse.utils";
 
 @Injectable()
 export class InterviewsService {
   constructor(
-    @InjectModel(Interview) private interviewsRepository: typeof Interview
+    @InjectModel(Interview) private interviewsRepository: typeof Interview,
+    private jwtService: JwtService 
   ) {}
 
-  async create(dto: CreateInterviewDto) {
-    const newInterview = await this.interviewsRepository.create(dto);
+  async create(dto: CreateInterviewDto, token: string) {
+    const decoded: {id: number, email: string, nickName: string} | undefined = this.jwtService.verify(token);
+    const newInterview = await this.interviewsRepository.create({...dto, nickName: decoded.nickName });
+
     return newInterview;
   }
-  async getInterviews(query: QueryParams ) {
-    console.log('parseQueryAndFilter', parseQueryAndFilter(query))
-    const interviewList = await this.interviewsRepository.findAll({
-      where: parseQueryAndFilter(query),
+
+  async getInterviews(query: QueryParams) {
+    const { rows: interviewList, count: total } = await this.interviewsRepository.findAndCountAll({
+      where: parseQueryAndFilter(query),      
     });
-    return interviewList;
+    return {
+      total,
+      interviews: interviewList,
+    };
   }
 }

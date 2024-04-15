@@ -5,4 +5,5 @@ export class CreateInterviewDto {
    readonly stage: string;
    readonly articleTitle: string;
    readonly articleDescription: string;
+   readonly nickName: string
 }

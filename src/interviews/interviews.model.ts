@@ -1,4 +1,5 @@
-import { Column, DataType, Model, Table} from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
+import { User } from "src/users/users.model";
 
 // Шаг 1 - описываем модель для создания интерьвью
 
@@ -9,6 +10,7 @@ interface InterviewCreatorAttrs {
     stage: string;
     articleTitle: string;
     articleDescription: string;
+    nickName: string
 }
 
 @Table({tableName: 'interviews', timestamps: true})
@@ -33,4 +35,8 @@ export class Interview extends Model<Interview, InterviewCreatorAttrs> {
     
     @Column({type: DataType.STRING, allowNull: false, unique: false,autoIncrement: false, primaryKey: true})
     stage: string;
+
+    @Column({type: DataType.STRING, allowNull: false, unique: false})
+    nickName: string;
+    
 }

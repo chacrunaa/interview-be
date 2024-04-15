@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from "@nestjs/common";
+import { Body, Controller, Get, Headers, Post, Query } from "@nestjs/common";
 import { CreateInterviewDto } from "src/interviews/dto/create-interview.dto";
 import { InterviewsService } from "src/interviews/interviews.service";
 
@@ -6,11 +6,10 @@ import { InterviewsService } from "src/interviews/interviews.service";
 export class InterviewsController {
   constructor(private readonly interviewsService: InterviewsService) {}
 
-  @Post() // Этот декоратор указывает, что следующий метод будет обрабатывать POST запросы
-  create(@Body() createInterviewDto: CreateInterviewDto) {
-    console.log('createInterviewDto', createInterviewDto)
-    // Этот метод будет вызываться при POST запросе по адресу /interviews
-    return this.interviewsService.create(createInterviewDto);
+  @Post() 
+  create(@Body() createInterviewDto: CreateInterviewDto, @Headers('Authorization') authHeader: string) {
+    const token = authHeader?.split(' ')[1];
+    return this.interviewsService.create(createInterviewDto, token);
   }
 
   @Get()

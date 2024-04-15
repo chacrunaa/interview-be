@@ -21,7 +21,6 @@ const processQueryParam = (
 
 // Функция для парсинга квери параметров и создания условий для запроса в базу данных
 export const parseQueryAndFilter = (query: QueryParams): FilterConditions => {
-  console.log("query", query);
   const { gradeMapping, stageMapping, statusMapping } = objectsOfComparison;
   const whereCondition: FilterConditions = {};
 
@@ -45,6 +44,5 @@ export const parseQueryAndFilter = (query: QueryParams): FilterConditions => {
       [Op.in]: processQueryParam(query.grade, gradeMapping),
     };
   }
-  console.log("whereCondition", whereCondition);
   return whereCondition;
 };
