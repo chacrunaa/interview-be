@@ -6,4 +6,6 @@ export class CreateInterviewDto {
    readonly articleTitle: string;
    readonly articleDescription: string;
    readonly nickName: string
+   readonly minoffer: number
+   readonly maxoffer: number
 }

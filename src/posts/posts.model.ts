@@ -22,9 +22,6 @@ export class Post extends Model<Post, PostCreationAttrs> {
     @Column({type: DataType.STRING, allowNull: false})
     content: string;
 
-    // @Column({type: DataType.STRING})
-    // image: string;
-
     @ForeignKey(() => User)
     @Column({type: DataType.INTEGER})
     userId: number;
