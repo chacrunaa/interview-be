@@ -1,10 +1,10 @@
 export const generatePrefixOfInterview = ({maxoffer, minoffer}:{maxoffer: number, minoffer: number}) => {
     let prefix = null;
     if(maxoffer && !minoffer) {
-        prefix = 'До';
+        prefix = 'до';
     }
     if(!maxoffer && minoffer) {
-        prefix = 'От';
+        prefix = 'от';
     }
     return prefix
 }

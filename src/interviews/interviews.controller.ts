@@ -13,7 +13,8 @@ export class InterviewsController {
   }
 
   @Get()
-  findAll(@Query() query) {
+  findAll(@Query() query, 
+  ) {
     return this.interviewsService.getInterviews(query);
   }
 }
