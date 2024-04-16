@@ -39,7 +39,7 @@ export class Interview extends Model<Interview, InterviewCreatorAttrs> {
     @Column({type: DataType.STRING, allowNull: false, unique: false,autoIncrement: false, primaryKey: true})
     stage: string;
     
-    @Column({type: DataType.STRING, allowNull: false, unique: false})
+    @Column({type: DataType.STRING, allowNull: true, unique: false})
     nickName: string;
 
     @Column({type: DataType.INTEGER, allowNull: true})

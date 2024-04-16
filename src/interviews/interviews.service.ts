@@ -29,8 +29,7 @@ export class InterviewsService {
   async getInterviews(query: QueryParams) {
     // Определяем limit и offset для пагинации
     const limit = query?.pageSize || 5; 
-    const offset = ((query?.page - 1) * limit) || 0;
-
+    const offset = ((query?.page - 1) * limit) || 0;    
     const { rows: interviewList, count: total } = await this.interviewsRepository.findAndCountAll({
       where: parseQueryAndFilter(query), 
       limit: limit,
