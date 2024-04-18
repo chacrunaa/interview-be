@@ -12,11 +12,19 @@ import {Post} from "./posts/posts.model";
 import { FilesModule } from './files/files.module';
 import {ServeStaticModule} from "@nestjs/serve-static";
 import { InterviewsModule } from './interviews/interviews.module';
+import { ErrorHandlingService } from './common/error-handling/error-handling.service';
 import * as path from 'path';
+import { APP_FILTER } from "@nestjs/core";
+import { ErrorHandlingFilter } from "src/common/error-handling/error-handling.filter";
 
 @Module({
   controllers: [],
-  providers: [],
+  providers: [ErrorHandlingService,
+    {
+      provide: APP_FILTER,
+      useClass: ErrorHandlingFilter,
+    },
+  ],
   imports: [
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
