@@ -14,8 +14,9 @@ import {ServeStaticModule} from "@nestjs/serve-static";
 import { InterviewsModule } from './interviews/interviews.module';
 import { ErrorHandlingService } from './common/error-handling/error-handling.service';
 import * as path from 'path';
-import { APP_FILTER } from "@nestjs/core";
+import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
 import { ErrorHandlingFilter } from "src/common/error-handling/error-handling.filter";
+import { ResponseInterceptor } from "src/common/interseptors/response.interceptor";
 
 @Module({
   controllers: [],
@@ -23,6 +24,10 @@ import { ErrorHandlingFilter } from "src/common/error-handling/error-handling.fi
     {
       provide: APP_FILTER,
       useClass: ErrorHandlingFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor,
     },
   ],
   imports: [
