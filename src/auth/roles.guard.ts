@@ -12,7 +12,7 @@ import {Reflector} from "@nestjs/core";
 import {ROLES_KEY} from "./roles-auth.decorator";
 
 @Injectable()
-export class RolesGuard implements CanActivate {
+export class    RolesGuard implements CanActivate {
     constructor(private jwtService: JwtService,
                 private reflector: Reflector) {
     }
@@ -30,11 +30,15 @@ export class RolesGuard implements CanActivate {
             const authHeader = req.headers.authorization;
             const bearer = authHeader.split(' ')[0]
             const token = authHeader.split(' ')[1]
-
+            /**
+             * Ожидается структура Bearer <token>, если нет - выбрасывается неавторизовнный
+            */
             if (bearer !== 'Bearer' || !token) {
                 throw new UnauthorizedException({message: 'Пользователь не авторизован'})
             }
-
+            /**
+             * Проверка валидности токена
+            */
             const user = this.jwtService.verify(token);
             req.user = user;
             return user.roles.some(role => requiredRoles.includes(role.value));
