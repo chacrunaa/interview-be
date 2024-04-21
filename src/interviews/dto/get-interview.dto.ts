@@ -1,7 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Transform } from "class-transformer";
-import { IsIn, IsOptional, IsString } from "class-validator";
-import { QueryEnumValidator } from "src/common/validators/query-string-validators/queryEnumValidator.validator";
 import { GradeEnum, StageEnum, StatusEnum } from "src/interviews/data/objectsOfComparison.constants";
 import { Interview } from "src/interviews/interviews.model";
 

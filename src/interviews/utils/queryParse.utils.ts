@@ -1,39 +1,26 @@
 import { Op } from "sequelize";
-import { QueryParams } from "src/interviews/dto/create-interview-query.dto";
-import { FilterConditions } from "src/interviews/utils/types";
+import { QueryParams } from "src/interviews/dto/get-interview.dto";
+export const parseQueryAndFilter = (query: QueryParams, enums: any): any => {
+  const whereCondition: any = {};
 
-
-// Обновленная функция для парсинга квери параметров
-export const parseQueryAndFilter = (query: QueryParams): FilterConditions => {
-  let whereCondition = {};
-
-  if (query.grade) {
-    // Разделяем значения параметра по запятым
-    let grades = query.grade.split(',').map(g => g.trim());
-    // Создаем условие OR для каждого из значений
-    whereCondition[Op.or] = grades.map(grade => ({
-      grade: {
-        [Op.iLike]: `%${grade}%` // используем iLike для поиска без учета регистра
-      }
-    }));
-  }
-
-  if (query.stage) {
-    let stages = query.stage.split(',').map(s => s.trim());
-    // Если условие OR уже создано, добавляем к нему новые условия
-    // В противном случае создаем новое условие OR
-    const stageConditions = stages.map(stage => ({
-      stage: {
-        [Op.iLike]: `%${stage}%`
-      }
-    }));
-
-    if (whereCondition[Op.or]) {
-      whereCondition[Op.or] = [...whereCondition[Op.or], ...stageConditions];
-    } else {
-      whereCondition[Op.or] = stageConditions;
+  // Функция для проверки и фильтрации значений по enum
+  const filterValidEnums = (values: string | string[], enumType: any): string[] => {
+    const enumValues = Object.values(enumType);
+    if (typeof values === 'string') {
+      values = values.split(',').map(value => value.trim());
     }
-  }
+    return values.filter(value => enumValues.includes(value));
+  };
+
+  // Автоматически обрабатываем все поля в query, для которых определены enum значения в enums
+  Object.keys(query).forEach(field => {
+    if (query[field] && enums[field]) {
+      const validValues = filterValidEnums(query[field], enums[field]);
+      if (validValues.length > 0) {
+        whereCondition[field] = { [Op.contains]: validValues };
+      }
+    }
+  });
 
   return whereCondition;
 };
