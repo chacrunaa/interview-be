@@ -1,5 +1,4 @@
 import { Op } from "sequelize";
-import { objectsOfComparison } from "src/interviews/data/objectsOfComparison.constants";
 import { QueryParams } from "src/interviews/dto/create-interview-query.dto";
 import { FilterConditions } from "src/interviews/utils/types";
 

@@ -1,14 +1,15 @@
-import { AllowNull, BelongsTo, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
-import { User } from "src/users/users.model";
+
+import { Column, DataType, Model, Table} from "sequelize-typescript";
 import { ApiTags, ApiProperty } from '@nestjs/swagger';
+import { GradeEnum, StageEnum, StatusEnum } from "src/interviews/data/objectsOfComparison.constants";
 
 
 
 interface InterviewCreatorAttrs {
     companyName: string;
-    status: string;
-    grade: string;
-    stage: string;
+    status: StatusEnum[];
+    grade: GradeEnum[];
+    stage: StageEnum[];
     articleTitle: string;
     articleDescription: string;
     nickName: string
@@ -34,17 +35,17 @@ export class Interview extends Model<Interview, InterviewCreatorAttrs> {
     @Column({type: DataType.STRING, allowNull: false})
     articleDescription: string;
 
-    @ApiProperty({ example: 'successful', description: 'Финальный статус взаимодействия с компанией' })
-    @Column({type: DataType.STRING, allowNull: false, unique: false, autoIncrement: false, primaryKey: true})
-    status: string;
+    @ApiProperty({ example: ['successful'], enum: StageEnum, description: 'Финальный статус взаимодействия с компанией' })
+    @Column({type: DataType.JSON, allowNull: false, unique: false, autoIncrement: false, primaryKey: true})
+    status: StatusEnum[];
 
-    @ApiProperty({ example: 'middle,senior,junior', description: 'Грейд требуемый компанией. Может быть несколько значений' })
-    @Column({type: DataType.STRING, allowNull: false, unique: false,autoIncrement: false, primaryKey: true})
-    grade: string;
+    @ApiProperty({ example: ['middle','senior','junior'], enum: GradeEnum, description: 'Грейд требуемый компанией. Может быть несколько значений' })
+    @Column({type: DataType.JSON, allowNull: false, unique: false,autoIncrement: false, primaryKey: true})
+    grade: GradeEnum[];
     
-    @ApiProperty({ example: 'livecoding,conversation,techpart', description: 'Этап взаимодействия с компанией' })
-    @Column({type: DataType.STRING, allowNull: false, unique: false,autoIncrement: false, primaryKey: true})
-    stage: string;
+    @ApiProperty({ example: ['livecoding','conversation','techpart'], enum: StageEnum, description: 'Этап взаимодействия с компанией' })
+    @Column({type: DataType.JSON, allowNull: false, unique: false,autoIncrement: false, primaryKey: true})
+    stage: StageEnum[];
     
     @ApiProperty({ example: 'Лютый', description: 'Уникальный никнэйм пользователя' })
     @Column({type: DataType.STRING, allowNull: true, unique: false})

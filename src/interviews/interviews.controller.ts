@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Headers, Post, Query } from "@nestjs/common";
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateInterviewDto } from "src/interviews/dto/create-interview.dto";
-import { InterviewsPaginationDto } from "src/interviews/dto/interview-pagination.dto";
+import { InterviewsPaginationDto } from "src/interviews/dto/get-interview.dto";
 import { Interview } from "src/interviews/interviews.model";
 import { InterviewsService } from "src/interviews/interviews.service";
 @ApiTags('interviews')
