@@ -1,24 +1,18 @@
-  const statusMapping = {
-    processing: 'processing',
-    failure: 'failure',
-    successful: 'successful',
-  };
+  export enum StatusEnum {
+    processing= 'processing',
+    failure= 'failure',
+    successful= 'successful',
+  }
   
-  const stageMapping = {
-    conversation: 'conversation',
-    livecoding: 'livecoding',
-    techpart: 'techpart',
-    scrinning: 'scrinning',
-  };
-  
-  const gradeMapping = {
-    junior: 'junior',
-    senior: 'senior',
-    middle: 'middle',
-  };
+  export enum StageEnum {
+    conversation= 'conversation',
+    livecoding= 'livecoding',
+    techpart= 'techpart',
+    scrinning= 'scrinning',
+  }
 
-  export const objectsOfComparison = {
-    statusMapping,
-    stageMapping,
-    gradeMapping,
+  export enum GradeEnum {
+    junior = 'junior',
+    senior = 'senior',
+    middle = 'middle',
   }
