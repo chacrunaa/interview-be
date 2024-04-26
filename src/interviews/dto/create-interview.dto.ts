@@ -26,8 +26,6 @@ export class CreateInterviewDto {
    readonly articleTitle: string;
    @ApiProperty({ example: 'Я ему одно, он мне другое, так и живём', description: 'Описание статьи, будет формате markdown' })
    readonly articleDescription: string;
-   @ApiProperty({ example: 'Лютый', description: 'Уникальный никнэйм пользователя' })
-   readonly nickName: string
    @ApiProperty({ example: 10000, description: 'Минимальное предложение по зп. Может быть не указано' })
    readonly minoffer: number
    @ApiProperty({ example: 20000, description: 'Максимальное предложение по зп. Может быть не указано' })
