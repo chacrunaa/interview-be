@@ -9,9 +9,13 @@ export const parseQueryAndFilter = (query: QueryParams, enums: any): any => {
     if (typeof values === 'string') {
       values = values.split(',').map(value => value.trim());
     }
-    return values.filter(value => enumValues.includes(value));
+  
+    // Преобразуем массив в Set, чтобы удалить дубликаты
+    const uniqueValues = new Set(values.filter(value => enumValues.includes(value)));
+  
+    // Возвращаем массив из значений Set
+    return Array.from(uniqueValues);
   };
-
   // Автоматически обрабатываем все поля в query, для которых определены enum значения в enums
   Object.keys(query).forEach(field => {
     if (query[field] && enums[field]) {
@@ -21,6 +25,5 @@ export const parseQueryAndFilter = (query: QueryParams, enums: any): any => {
       }
     }
   });
-
   return whereCondition;
 };

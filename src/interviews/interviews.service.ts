@@ -6,7 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { parseQueryAndFilter } from "src/interviews/utils/queryParse.utils";
 import { generatePrefixOfInterview } from "src/interviews/utils/generatePrefixOfInterview.utils";
 import { QueryParams } from "src/interviews/dto/get-interview.dto";
-import { GradeEnum, StatusEnum } from "src/interviews/data/objectsOfComparison.constants";
+import { GradeEnum, StageEnum, StatusEnum } from "src/interviews/data/objectsOfComparison.constants";
 import { QueryParamsDelete } from "./dto/delete-interview.dto";
 import { isNumber } from "class-validator";
 import { QueryParamsPut } from "./dto/put-interview.dto";
@@ -31,14 +31,16 @@ export class InterviewsService {
   }
 
   async getInterviews(query: QueryParams) {
-    // Определяем limit и offset для пагинации
-    const limit = query?.pageSize || 5; 
-    const offset = ((query?.page - 1) * limit) || 0;    
+    const pageSize = query?.pageSize > 0 ? query.pageSize : 5; 
+    const page = query?.page > 0 ? query.page : 1;
+    const limit = pageSize; 
+    const offset = (page - 1) * limit;
+
     const { rows: interviewList, count: total } = await this.interviewsRepository.findAndCountAll({
       where: parseQueryAndFilter(query, {
         grade: GradeEnum,
         status: StatusEnum,
-        stage: StatusEnum,
+        stage: StageEnum,
       }), 
       limit: limit,
       offset: offset,     
@@ -46,7 +48,7 @@ export class InterviewsService {
     return {
       total,
       totalPages: Math.ceil(total / limit),
-      currentPage: query?.page || 0,
+      currentPage: page,
       pageSize: limit,
       interviews: interviewList,
 
