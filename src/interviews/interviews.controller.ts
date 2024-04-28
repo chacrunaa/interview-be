@@ -1,9 +1,12 @@
-import { Body, Controller, Get, Headers, Post, Query } from "@nestjs/common";
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Delete, Get, Headers, Post, Put, Query } from "@nestjs/common";
+import { ApiOperation, ApiProperty, ApiQuery, ApiRequestTimeoutResponse, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { query } from "express";
 import { CreateInterviewDto } from "src/interviews/dto/create-interview.dto";
 import { GetInterviewsDto } from "src/interviews/dto/get-interview.dto";
 import { Interview } from "src/interviews/interviews.model";
 import { InterviewsService } from "src/interviews/interviews.service";
+import { DeleteInterviewsDto } from "./dto/delete-interview.dto";
+import { PutInterviewsDto } from "./dto/put-interview.dto";
 @ApiTags('interviews')
 @Controller("interviews")
 export class InterviewsController {
@@ -26,8 +29,26 @@ export class InterviewsController {
   @ApiQuery({ name: 'page', required: false, description: 'Количество страниц', type: Number })
   @ApiQuery({ name: 'pageSize', required: false, description: 'Количество статей на странице', type: Number })
   
-  findAll(@Query() query, 
+  findAll(@Query() query
   ) {
     return this.interviewsService.getInterviews(query);
   }
+
+  @Delete()
+  @ApiOperation({ summary: 'Удаление статьи'  })
+  @ApiResponse({ status: 200, description: 'Удалить статью', type:  DeleteInterviewsDto })
+
+  delete(@Body() id:DeleteInterviewsDto){
+    return this.interviewsService.deleteInterview(id)
+  }
+
+  @Put()
+  @ApiOperation({ summary: 'Обновление статьи'  })
+  @ApiResponse({ status: 200, description: 'Обновить статью по Id.', type:  PutInterviewsDto })
+
+  update(@Body() query){
+    return this.interviewsService.updateInterview(query)
+  }
+
+
 }
