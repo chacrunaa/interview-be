@@ -17,6 +17,7 @@ import * as path from 'path';
 import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
 import { ErrorHandlingFilter } from "src/common/error-handling/error-handling.filter";
 import { ResponseInterceptor } from "src/common/interseptors/response.interceptor";
+import { CompaniesModule } from './companies/companies.module';
 
 @Module({
   controllers: [],
@@ -56,6 +57,7 @@ import { ResponseInterceptor } from "src/common/interseptors/response.intercepto
     PostsModule,
     FilesModule,
     InterviewsModule,
+    CompaniesModule,
   ],
 })
 export class AppModule {}
