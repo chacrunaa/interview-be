@@ -1,21 +1,15 @@
 import { getModelToken } from "@nestjs/sequelize";
 import { TestingModule } from "@nestjs/testing";
-import { Op } from "sequelize";
 import { initializeTestModule } from "src/__tests__/testSetup";
 import {
   MockInterviewRepositoryType,
   commonProviders,
   createMockInterviewDto,
 } from "src/interviews/__tests__/testMocks";
-import {
-  GradeEnum,
-  StageEnum,
-  StatusEnum,
-} from "src/interviews/data/objectsOfComparison.constants";
 import { Interview } from "src/interviews/interviews.model";
 import { InterviewsService } from "src/interviews/interviews.service";
 
-describe("InterviewsService - Get Interviews", () => {
+describe("InterviewsService - Pagination", () => {
   let service: InterviewsService;
   let mockInterviewRepository: MockInterviewRepositoryType;
 
@@ -24,15 +18,16 @@ describe("InterviewsService - Get Interviews", () => {
     service = module.get<InterviewsService>(InterviewsService);
     mockInterviewRepository = module.get(getModelToken(Interview));
   });
-  afterEach(() => {
-    jest.clearAllMocks(); // очистка всех моков после каждого теста
-  });
-  // Подготовка моков
-  const expectedRows = Array(50)
-    .fill({})
-    .map(() => createMockInterviewDto());
-  const expectedTotal = expectedRows.length;
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+ // Подготовка моков
+ const expectedRows = Array(50)
+ .fill({})
+ .map(() => createMockInterviewDto());
+const expectedTotal = expectedRows.length;
   /**
    * --------------------------------------------------------------------------------------------------------
    * Базовые тесты на работу сервиса в целом + пагинация.
@@ -125,76 +120,6 @@ describe("InterviewsService - Get Interviews", () => {
     });
   });
 
-  /**
-   * --------------------------------------------------------------------------------------------------------
-   * Базовые тесты на работу фильтрации по квери-параметрам
-   *
-   * */
-  test.each`
-    status                                            | grade                                   | stage                     | pageSize | page | description                                                                       | expectedFilter                                                                              | expectedCount
-    ${[StatusEnum.successful]}                        | ${[]}                                   | ${[]}                     | ${5}     | ${1} | ${"объект с одним статусом и пагинацией"}                                         | ${{ status: [StatusEnum.successful] }}                                                      | ${1}
-    ${[StatusEnum.successful, StatusEnum.failure]}    | ${[]}                                   | ${[]}                     | ${10}    | ${2} | ${"объект с несколькими статусами и пагинацией"}                                  | ${{ status: [StatusEnum.successful, StatusEnum.failure] }}                                  | ${2}
-    ${[StatusEnum.failure]}                           | ${[]}                                   | ${[]}                     | ${5}     | ${1} | ${"объект не содержит искомый статус с пагинацией"}                               | ${{ status: [StatusEnum.failure] }}                                                         | ${1}
-    ${[StatusEnum.successful]}                        | ${[GradeEnum.junior]}                   | ${[]}                     | ${3}     | ${1} | ${"объект с статусом и grade 'junior' с пагинацией"}                              | ${{ status: [StatusEnum.successful], grade: [GradeEnum.junior] }}                           | ${1}
-    ${[]}                                             | ${[GradeEnum.middle, GradeEnum.senior]} | ${[StageEnum.livecoding]} | ${4}     | ${2} | ${"объекты только с grades 'middle', 'senior' и stage 'livecoding' с пагинацией"} | ${{ grade: [GradeEnum.middle, GradeEnum.senior], stage: [StageEnum.livecoding] }}           | ${2}
-    ${[StatusEnum.failure]}                           | ${[GradeEnum.senior]}                   | ${[StageEnum.techpart]}   | ${2}     | ${1} | ${"объект с failure, grade 'senior', stage 'techpart' и пагинацией"}              | ${{ status: [StatusEnum.failure], grade: [GradeEnum.senior], stage: [StageEnum.techpart] }} | ${1}
-    ${[StatusEnum.successful]}                        | ${[]}                                   | ${[]}                     | ${5}     | ${1} | ${"Один successful статус"}                                                       | ${{ status: [StatusEnum.successful] }}                                                      | ${1}
-    ${[]}                                             | ${[GradeEnum.junior]}                   | ${[]}                     | ${5}     | ${1} | ${"Один junior grade"}                                                            | ${{ grade: [GradeEnum.junior] }}                                                            | ${1}
-    ${[]}                                             | ${[]}                                   | ${[StageEnum.livecoding]} | ${5}     | ${1} | ${"Один stage livecoding"}                                                        | ${{ stage: [StageEnum.livecoding] }}                                                        | ${2}
-    ${[StatusEnum.successful, StatusEnum.successful]} | ${[]}                                   | ${[]}                     | ${5}     | ${1} | ${"Проверка дубликатов"}                                                          | ${{ status: [StatusEnum.successful] }}                                                      | ${1}
-  `(
-    "фильтрует результаты на основе $description",
-    async ({
-      status,
-      grade,
-      stage,
-      pageSize,
-      page,
-      expectedFilter,
-      expectedCount,
-    }) => {
-      // Подготовка запроса, включая пагинацию
-      const query = {} as any;
-      if (status.length > 0) query.status = status.join(",");
-      if (grade.length > 0) query.grade = grade.join(",");
-      if (stage.length > 0) query.stage = stage.join(",");
-      query.pageSize = pageSize;
-      query.page = page;
-
-      const mockRows = Array(expectedCount)
-        .fill({})
-        .map((_, idx) => ({ id: idx + 1, status, grade, stage }));
-      mockInterviewRepository.findAndCountAll.mockResolvedValueOnce({
-        rows: mockRows,
-        count: expectedCount,
-      });
-
-      const result = await service.getInterviews(query);
-
-      // Проверяем вызов с ожидаемыми фильтрами и параметрами пагинации
-      expect(mockInterviewRepository.findAndCountAll).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: expect.objectContaining({
-            ...(status.length && {
-              status: { [Op.contains]: expectedFilter.status },
-            }),
-            ...(grade.length && {
-              grade: { [Op.contains]: expectedFilter.grade },
-            }),
-            ...(stage.length && {
-              stage: { [Op.contains]: expectedFilter.stage },
-            }),
-          }),
-          limit: pageSize,
-          offset: pageSize * (page - 1),
-        })
-      );
-
-      // Проверка соответствия результатов ожиданиям
-      expect(result.interviews).toEqual(expect.arrayContaining(mockRows));
-      expect(result.total).toBe(expectedCount);
-    }
-  );
 
   test.each`
     pageSize | page  | total  | expectedTotalPages | expectedError | description
