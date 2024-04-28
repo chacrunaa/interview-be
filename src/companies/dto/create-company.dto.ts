@@ -11,7 +11,7 @@ export class CreateCompanyDto {
   readonly companyName: string;
 
   @ApiProperty({
-    example: "Крупнейший энергетический гигант России",
+    example: "Классная внатуре компания, газ качает",
     description: "Описание компании",
   })
   @IsString()

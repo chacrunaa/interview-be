@@ -2,9 +2,10 @@ import { Body, Controller, Get, Post, Query, Headers } from "@nestjs/common";
 import { CompaniesService } from "./companies.service";
 import { CreateCompanyDto } from "./dto/create-company.dto";
 import { GetCompaniesDto, QueryParams } from "./dto/get-company.dto";
-import { ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Company } from "./companies.model";
 
+@ApiTags("Companies")
 @Controller("companies")
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
@@ -12,7 +13,11 @@ export class CompaniesController {
   @Post()
   @ApiOperation({ summary: "Создание компании" })
   @ApiResponse({ status: 200, description: "Компания создана", type: Company })
-  create(@Body() createCompanyDto: CreateCompanyDto) {
+  create(
+    @Body() createCompanyDto: CreateCompanyDto
+    // @Headers("Authorization") authHeader: string
+  ) {
+    // const token = authHeader?.split(" ")[1];
     return this.companiesService.create(createCompanyDto);
   }
 
