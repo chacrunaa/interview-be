@@ -19,8 +19,8 @@ export class PostsController {
   createPost(@Body() dto: CreatePostDto, @UploadedFile() image) {
     return this.postService.create(dto, image);
   }
-    @Get()
-    getAllPosts() {
-      return this.postService.findAll();
-    }
+  @Get()
+  getAllPosts() {
+    return this.postService.findAll();
+  }
 }

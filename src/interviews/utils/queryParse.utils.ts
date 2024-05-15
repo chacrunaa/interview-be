@@ -4,20 +4,25 @@ export const parseQueryAndFilter = (query: QueryParams, enums: any): any => {
   const whereCondition: any = {};
 
   // Функция для проверки и фильтрации значений по enum
-  const filterValidEnums = (values: string | string[], enumType: any): string[] => {
+  const filterValidEnums = (
+    values: string | string[],
+    enumType: any
+  ): string[] => {
     const enumValues = Object.values(enumType);
-    if (typeof values === 'string') {
-      values = values.split(',').map(value => value.trim());
+    if (typeof values === "string") {
+      values = values.split(",").map((value) => value.trim());
     }
-  
+
     // Преобразуем массив в Set, чтобы удалить дубликаты
-    const uniqueValues = new Set(values.filter(value => enumValues.includes(value)));
-  
+    const uniqueValues = new Set(
+      values.filter((value) => enumValues.includes(value))
+    );
+
     // Возвращаем массив из значений Set
     return Array.from(uniqueValues);
   };
   // Автоматически обрабатываем все поля в query, для которых определены enum значения в enums
-  Object.keys(query).forEach(field => {
+  Object.keys(query).forEach((field) => {
     if (query[field] && enums[field]) {
       const validValues = filterValidEnums(query[field], enums[field]);
       if (validValues.length > 0) {

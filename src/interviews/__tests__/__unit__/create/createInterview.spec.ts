@@ -82,6 +82,8 @@ describe("InterviewsService - Create Interviews", () => {
     mockInterviewRepository.create.mockRejectedValue(
       new Error("Ожидаемое сообщение об ошибке")
     );
-    await expect(service.create(dto, token)).rejects.toThrow("Ожидаемое сообщение об ошибке");
+    await expect(service.create(dto, token)).rejects.toThrow(
+      "Ожидаемое сообщение об ошибке"
+    );
   });
 });

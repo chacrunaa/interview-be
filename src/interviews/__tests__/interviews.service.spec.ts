@@ -20,7 +20,7 @@ describe("InterviewsService", () => {
    */
   let service: InterviewsService;
   let jwtService: JwtService;
-  let mockInterviewRepository = {
+  const mockInterviewRepository = {
     /**
  * jest.fn():
     jest.fn() создает новую мок-функцию. Это означает, что функция не будет выполнять какую-либо реальную логику из вашего приложения, 

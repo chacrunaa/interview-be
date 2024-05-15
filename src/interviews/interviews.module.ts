@@ -7,7 +7,7 @@ import { AuthModule } from "src/auth/auth.module";
 import { ErrorHandlingService } from "src/common/error-handling/error-handling.service";
 
 @Module({
-  imports: [SequelizeModule.forFeature([Interview, ]),  AuthModule],
+  imports: [SequelizeModule.forFeature([Interview]), AuthModule],
   controllers: [InterviewsController],
   providers: [InterviewsService, ErrorHandlingService],
 })
