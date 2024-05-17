@@ -1,4 +1,3 @@
-
 import { generatePrefixOfInterview } from "src/interviews/utils/generatePrefixOfInterview.utils";
 
 describe("InterviewsService - Utils generatePrefixOfInterview", () => {

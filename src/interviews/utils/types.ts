@@ -1,6 +1,5 @@
-
-   export interface FilterConditions {
-    status?: object;
-    stage?: object;
-    grade?: object;
-  }
+export interface FilterConditions {
+  status?: object;
+  stage?: object;
+  grade?: object;
+}
