@@ -5,18 +5,25 @@ import * as uuid from "uuid";
 
 @Injectable()
 export class FilesService {
-  async createFile(file): Promise<string> {
+  async createFile(file: any): Promise<string> {
     console.log(file, "file");
 
     try {
-      const fileName = uuid.v4() + ".jpg";
-      const filePath = path.resolve(__dirname, "..", "static");
+      const fileName = uuid.v4() + path.extname(file.originalname);
+      const filePath = path.resolve("static");
+      console.log("File path:", filePath);
       if (!fs.existsSync(filePath)) {
+        console.log("Creating directory:", filePath);
         fs.mkdirSync(filePath, { recursive: true });
+        console.log("Directory created");
       }
-      fs.writeFileSync(path.join(filePath, fileName), file.buffer);
+      const fullPath = path.join(filePath, fileName);
+      console.log("Writing file:", fullPath);
+      fs.writeFileSync(fullPath, file.buffer);
+      console.log("File written:", fileName);
       return fileName;
     } catch (e) {
+      console.error("Error writing file:", e);
       throw new HttpException(
         "Произошла ошибка при записи файла",
         HttpStatus.INTERNAL_SERVER_ERROR

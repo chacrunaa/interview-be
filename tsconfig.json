@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "node16",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -13,6 +13,9 @@
     "incremental": true,
     "paths": {
       "src/*": ["src/*"]
-    }
-  }
+    },
+    // "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  // "include": ["src"]
 }
