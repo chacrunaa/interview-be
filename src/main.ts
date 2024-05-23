@@ -2,10 +2,12 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { ValidationPipe } from "./pipes/validation.pipe";
+import { NestExpressApplication } from "@nestjs/platform-express";
+import { join } from "path";
 
 async function start() {
   const PORT = process.env.PORT || 5000;
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   const config = new DocumentBuilder()
     .setTitle("bebebe")
@@ -23,6 +25,8 @@ async function start() {
     credentials: true,
     allowedHeaders: "Origin,X-Requested-With,Content-Type,Accept,Authorization",
   });
+
+  app.useStaticAssets(join(__dirname, "..", "static"));
 
   await app.listen(PORT, () => console.log(`Server started on port = ${PORT}`));
 }
