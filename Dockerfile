@@ -6,7 +6,7 @@ COPY package.json yarn.lock ./
 
 RUN yarn install --frozen-lockfile
 
-COPY . .
+COPY ./dist ./dist
 
 EXPOSE 5000
 
