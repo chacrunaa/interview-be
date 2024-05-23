@@ -67,6 +67,7 @@ export class InterviewsService {
       currentPage: page,
       pageSize: limit,
       interviews: interviewList,
+      test: 'test PIPELINE BE'
     };
   }
 
