@@ -26,7 +26,7 @@ async function start() {
     allowedHeaders: "Origin,X-Requested-With,Content-Type,Accept,Authorization",
   });
 
-  app.useStaticAssets(join(__dirname, "..", "static"));
+  // app.useStaticAssets(join(__dirname, "..", "static"));
 
   await app.listen(PORT, () => console.log(`Server started on port = ${PORT}`));
 }

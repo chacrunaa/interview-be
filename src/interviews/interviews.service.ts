@@ -28,9 +28,8 @@ export class InterviewsService {
   ) {}
 
   async create(dto: CreateInterviewDto, token: string) {
-    const decoded:
-      | { id: number; email: string; nickName: string }
-      | undefined = this.jwtService.verify(token);
+    const decoded: { id: number; email: string; nickName: string } | undefined =
+      this.jwtService.verify(token);
     const newInterview = await this.interviewsRepository.create({
       ...dto,
       nickName: decoded.nickName,
@@ -49,18 +48,16 @@ export class InterviewsService {
     const limit = pageSize;
     const offset = (page - 1) * limit;
 
-    const {
-      rows: interviewList,
-      count: total,
-    } = await this.interviewsRepository.findAndCountAll({
-      where: parseQueryAndFilter(query, {
-        grade: GradeEnum,
-        status: StatusEnum,
-        stage: StageEnum,
-      }),
-      limit: limit,
-      offset: offset,
-    });
+    const { rows: interviewList, count: total } =
+      await this.interviewsRepository.findAndCountAll({
+        where: parseQueryAndFilter(query, {
+          grade: GradeEnum,
+          status: StatusEnum,
+          stage: StageEnum,
+        }),
+        limit: limit,
+        offset: offset,
+      });
     return {
       total,
       totalPages: Math.ceil(total / limit),

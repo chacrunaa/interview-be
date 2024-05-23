@@ -9,6 +9,7 @@ import {
 import { IsString, Matches, ValidateIf } from "class-validator";
 
 interface InterviewCreatorAttrs {
+  id: string;
   companyName: string;
   status: StatusEnum[];
   grade: GradeEnum[];
@@ -27,12 +28,12 @@ interface InterviewCreatorAttrs {
 export class Interview extends Model<Interview, InterviewCreatorAttrs> {
   @ApiProperty({ example: 1, description: "Уникальный идентификатор" })
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.STRING,
     unique: true,
-    autoIncrement: true,
+    autoIncrement: false,
     primaryKey: true,
   })
-  id: number;
+  id: string;
   @ApiProperty({ example: "Газпром", description: "Название компании" })
   @Column({ type: DataType.STRING, allowNull: false })
   companyName: string;
