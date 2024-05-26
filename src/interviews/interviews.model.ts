@@ -6,6 +6,7 @@ import {
   StageEnum,
   StatusEnum,
 } from "src/interviews/data/objectsOfComparison.constants";
+import { IsString, Matches, ValidateIf } from "class-validator";
 
 interface InterviewCreatorAttrs {
   companyName: string;
@@ -19,6 +20,7 @@ interface InterviewCreatorAttrs {
   minoffer: number;
   prefix: string;
   formatJob: FormatJobEnum[];
+  linkJob?: string;
 }
 @ApiTags("interviews")
 @Table({ tableName: "interviews", timestamps: true })
@@ -131,4 +133,19 @@ export class Interview extends Model<Interview, InterviewCreatorAttrs> {
     primaryKey: true,
   })
   formatjob: FormatJobEnum[];
+
+  @ApiProperty({
+    example: "https://hh.ru/vacancy/98863179",
+    description: "Ссылка на вакансию",
+  })
+  @ValidateIf((o) => o.linkjob !== null && o.linkjob !== undefined)
+  @IsString()
+  @Matches(
+    /^https:\/\/(hh\.ru\/vacancy\/\d+|career\.habr\.com\/vacancies\/\d+)(\?.*)?$/,
+    {
+      message: "linkjob must be a valid URL from hh.ru or career.habr.com",
+    }
+  )
+  @Column({ type: DataType.STRING, allowNull: true, unique: false })
+  linkjob: string;
 }
