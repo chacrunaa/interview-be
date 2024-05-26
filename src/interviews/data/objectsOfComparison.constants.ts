@@ -16,3 +16,9 @@ export enum GradeEnum {
   senior = "senior",
   middle = "middle",
 }
+
+export enum FormatJobEnum {
+  office = "office",
+  remote = "remote",
+  hybrid = "hybrid",
+}

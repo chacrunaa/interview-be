@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { ArrayMaxSize, ArrayNotEmpty, IsArray, IsEnum } from "class-validator";
 import {
+  FormatJobEnum,
   GradeEnum,
   StageEnum,
   StatusEnum,
@@ -61,4 +62,15 @@ export class CreateInterviewDto {
     description: "Максимальное предложение по зп. Может быть не указано",
   })
   readonly maxoffer: number;
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsEnum(FormatJobEnum, { each: true })
+  @ApiProperty({
+    example: ["office", "remote", "hybrid"],
+    enum: FormatJobEnum,
+    isArray: true,
+    description: "формат работы",
+  })
+  readonly formatjob: FormatJobEnum[];
 }

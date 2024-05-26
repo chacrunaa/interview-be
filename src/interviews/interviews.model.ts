@@ -1,6 +1,7 @@
 import { Column, DataType, Model, Table } from "sequelize-typescript";
 import { ApiTags, ApiProperty } from "@nestjs/swagger";
 import {
+  FormatJobEnum,
   GradeEnum,
   StageEnum,
   StatusEnum,
@@ -17,6 +18,7 @@ interface InterviewCreatorAttrs {
   maxoffer: number;
   minoffer: number;
   prefix: string;
+  formatJob: FormatJobEnum[];
 }
 @ApiTags("interviews")
 @Table({ tableName: "interviews", timestamps: true })
@@ -115,4 +117,18 @@ export class Interview extends Model<Interview, InterviewCreatorAttrs> {
   })
   @Column({ type: DataType.STRING, allowNull: true })
   prefix: string;
+
+  @ApiProperty({
+    example: ["hybrid", "remote", "office"],
+    enum: FormatJobEnum,
+    description: "Формат работы",
+  })
+  @Column({
+    type: DataType.JSON,
+    allowNull: false,
+    unique: false,
+    autoIncrement: false,
+    primaryKey: true,
+  })
+  formatjob: FormatJobEnum[];
 }
