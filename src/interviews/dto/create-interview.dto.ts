@@ -86,10 +86,9 @@ export class CreateInterviewDto {
     example: "https://hh.ru/vacancy/98863179",
     description: "Ссылка на вакансию",
   })
-  @ValidateIf((o) => o.linkjob !== null && o.linkjob !== undefined)
   @IsString()
   @Matches(
-    /^https:\/\/(hh\.ru\/vacancy\/\d+|career\.habr\.com\/vacancies\/\d+)(\?.*)?$/,
+    /^(https:\/\/(hh\.ru\/vacancy\/\d+|career\.habr\.com\/vacancies\/\d+)(\?.*)?)?$/,
     {
       message: "linkjob must be a valid URL from hh.ru or career.habr.com",
     }

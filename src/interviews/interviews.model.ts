@@ -138,14 +138,13 @@ export class Interview extends Model<Interview, InterviewCreatorAttrs> {
     example: "https://hh.ru/vacancy/98863179",
     description: "Ссылка на вакансию",
   })
-  @ValidateIf((o) => o.linkjob !== null && o.linkjob !== undefined)
   @IsString()
   @Matches(
-    /^https:\/\/(hh\.ru\/vacancy\/\d+|career\.habr\.com\/vacancies\/\d+)(\?.*)?$/,
+    /^(https:\/\/(hh\.ru\/vacancy\/\d+|career\.habr\.com\/vacancies\/\d+)(\?.*)?)?$/,
     {
       message: "linkjob must be a valid URL from hh.ru or career.habr.com",
     }
   )
-  @Column({ type: DataType.STRING, allowNull: true, unique: false })
+  @Column({ type: DataType.STRING, allowNull: false, unique: false })
   linkjob: string;
 }
