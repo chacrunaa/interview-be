@@ -1,10 +1,12 @@
 import { Column, DataType, Model, Table } from "sequelize-typescript";
 import { ApiTags, ApiProperty } from "@nestjs/swagger";
 import {
+  FormatJobEnum,
   GradeEnum,
   StageEnum,
   StatusEnum,
 } from "src/interviews/data/objectsOfComparison.constants";
+import { IsString, Matches, ValidateIf } from "class-validator";
 
 interface InterviewCreatorAttrs {
   companyName: string;
@@ -17,6 +19,8 @@ interface InterviewCreatorAttrs {
   maxoffer: number;
   minoffer: number;
   prefix: string;
+  formatJob: FormatJobEnum[];
+  linkJob?: string;
 }
 @ApiTags("interviews")
 @Table({ tableName: "interviews", timestamps: true })
@@ -115,4 +119,32 @@ export class Interview extends Model<Interview, InterviewCreatorAttrs> {
   })
   @Column({ type: DataType.STRING, allowNull: true })
   prefix: string;
+
+  @ApiProperty({
+    example: ["hybrid", "remote", "office"],
+    enum: FormatJobEnum,
+    description: "Формат работы",
+  })
+  @Column({
+    type: DataType.JSON,
+    allowNull: false,
+    unique: false,
+    autoIncrement: false,
+    primaryKey: true,
+  })
+  formatjob: FormatJobEnum[];
+
+  @ApiProperty({
+    example: "https://hh.ru/vacancy/98863179",
+    description: "Ссылка на вакансию",
+  })
+  @IsString()
+  @Matches(
+    /^(https:\/\/(hh\.ru\/vacancy\/\d+|career\.habr\.com\/vacancies\/\d+)(\?.*)?)?$/,
+    {
+      message: "linkjob must be a valid URL from hh.ru or career.habr.com",
+    }
+  )
+  @Column({ type: DataType.STRING, allowNull: false, unique: false })
+  linkjob: string;
 }

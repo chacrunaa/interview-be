@@ -1,6 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { ArrayMaxSize, ArrayNotEmpty, IsArray, IsEnum } from "class-validator";
 import {
+  ArrayMaxSize,
+  ArrayNotEmpty,
+  IsArray,
+  IsEnum,
+  IsString,
+  Matches,
+  ValidateIf,
+} from "class-validator";
+import {
+  FormatJobEnum,
   GradeEnum,
   StageEnum,
   StatusEnum,
@@ -61,4 +70,28 @@ export class CreateInterviewDto {
     description: "Максимальное предложение по зп. Может быть не указано",
   })
   readonly maxoffer: number;
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsEnum(FormatJobEnum, { each: true })
+  @ApiProperty({
+    example: ["office", "remote", "hybrid"],
+    enum: FormatJobEnum,
+    isArray: true,
+    description: "формат работы",
+  })
+  readonly formatjob: FormatJobEnum[];
+
+  @ApiProperty({
+    example: "https://hh.ru/vacancy/98863179",
+    description: "Ссылка на вакансию",
+  })
+  @IsString()
+  @Matches(
+    /^(https:\/\/(hh\.ru\/vacancy\/\d+|career\.habr\.com\/vacancies\/\d+)(\?.*)?)?$/,
+    {
+      message: "linkjob must be a valid URL from hh.ru or career.habr.com",
+    }
+  )
+  readonly linkjob: string;
 }
