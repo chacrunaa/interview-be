@@ -1,10 +1,10 @@
-FROM dockerhub.timeweb.cloud/library/node:18-alpine
+FROM dockerhub.timeweb.cloud/library/node:20-alpine
 
 WORKDIR /app
 
 COPY package.json yarn.lock ./
 
-RUN yarn install --frozen-lockfile
+RUN yarn install
 
 COPY ./dist ./dist
 
