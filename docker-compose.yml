@@ -1,15 +1,29 @@
 version: '3.0'
 
 services:
-  main:
-    container_name: main
+  front:
+    container_name: front
     build:
-      context: .
+      context: ./project/interview-fe
     env_file:
-      - .development.env
+      - ./project/.env.local
     volumes:
-      - .:/app
-      - /app/node_modules
+      - ./project/interview-fe:/app
+    ports:
+      - 5173:5173
+    depends_on:
+      - nginx
+      - backend
+    restart: always
+
+  backend:
+    container_name: backend
+    build:
+      context: ./project/interview-be
+    env_file:
+      - ./project/interview-be/.development.env
+    volumes:
+      - ./project/interview-be:/app
     ports:
       - 5000:5000
       - 9229:9229
@@ -17,11 +31,21 @@ services:
     depends_on:
       - postgres
     restart: always
+
+  nginx:
+    image: nginx:1.27.0
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./project/nginx:/etc/nginx/conf.d
+      - ./project/certs:/etc/ssl/certs:ro
+
   postgres:
     container_name: postgres
     image: postgres:12
     env_file:
-      - .development.env
+      - ./project/interview-be/.development.env
     environment:
       PG_DATA: /var/lib/postgresql/data
     ports:
@@ -32,4 +56,3 @@ services:
 
 volumes:
   pgdata:
-
